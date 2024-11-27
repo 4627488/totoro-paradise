@@ -60,6 +60,12 @@ const updateLine = () => {
     });
     map.value.add(marker);
   });
+  const target = routes.value.find((route) => route.pointId === props.target);
+  if (!target) return [];
+  const lonlat = [target.longitude, target.latitude];
+  map.value.setCenter(lonlat);
+  map.value.setZoom(17);
+  //updateLine();
 };
 
 watch(
