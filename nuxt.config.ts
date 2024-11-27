@@ -6,6 +6,7 @@ export default defineNuxtConfig({
   pages: true,
   ssr: false,
   routeRules: { '/totoro/**': { proxy: 'https://app.xtotoro.com/app/**' } },
+
   vite: {
     build: { commonjsOptions: { transformMixedEsModules: true } },
     resolve: { alias: { buffer: 'buffer' } },
@@ -15,9 +16,11 @@ export default defineNuxtConfig({
       include: ['@vueuse/core', 'date-fns', 'uuid', 'md5', '@amap/amap-jsapi-loader'],
     },
   },
+
   build: {
     transpile: ['vuetify'],
   },
+
   modules: [
     '@unocss/nuxt',
     async (options, nuxt) => {
@@ -27,4 +30,6 @@ export default defineNuxtConfig({
       });
     },
   ],
+
+  compatibilityDate: '2024-11-27',
 });
