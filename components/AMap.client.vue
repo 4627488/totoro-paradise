@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AMapLoader from '@amap/amap-jsapi-loader';
 import generateRoute from '~/src/utils/generateRoute';
+import { useAppConfig } from '#app';
 
 const props = defineProps<{ target: string }>();
 const emit = defineEmits<{ (e: 'update:target', target: string): void }>();
@@ -86,12 +87,14 @@ watch([sunrunPaper, map], () => {
   updateLine();
 });
 
+const appConfig = useAppConfig();
+
 watch(
   () => containerRef.value,
   async () => {
     if (!containerRef.value) return;
     const AMapLoaded = await AMapLoader.load({
-      key: '429918c056df5c12059a027c2cbd921c', // 申请好的Web端开发者Key，首次调用 load 时必填
+      key: appConfig.amapApiKey, // 从配置文件中读取key
       version: '2.0', // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
     });
     AMap.value = AMapLoaded;
