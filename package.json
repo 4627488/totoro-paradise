@@ -1,7 +1,7 @@
 {
   "name": "totoro-paradise",
   "type": "module",
-  "version": "2.0.4-rev.2",
+  "version": "2.1.0",
   "packageManager": "pnpm@8.15.5",
   "author": "BeiyanYunyi & Clansty",
   "license": "AGPL-3.0-or-later",
