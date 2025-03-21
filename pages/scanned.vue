@@ -21,61 +21,107 @@ const handleUpdate = (target: string) => {
 };
 </script>
 <template>
-  <p>请核对个人信息</p>
-  <VTable density="compact" class="mb-6 mt-4">
-    <tbody>
-      <tr>
-        <td>学校</td>
-        <td>{{ session.campusName }}</td>
-      </tr>
-      <tr>
-        <td>学院</td>
-        <td>{{ session.collegeName }}</td>
-      </tr>
-      <tr>
-        <td>学号</td>
-        <td>{{ session.stuNumber }}</td>
-      </tr>
-      <tr>
-        <td>姓名</td>
-        <td>{{ session.stuName }}</td>
-      </tr>
-    </tbody>
-  </VTable>
-  <template v-if="data">
-    <VSelect
-      v-model="selectValue"
-      :items="data.runPointList"
-      item-title="pointName"
-      item-value="pointId"
-      variant="underlined"
-      label="路线"
-      class="mt-2"
-    />
-    <div class="flex gap-4">
-      <VBtn
-        variant="outlined"
-        color="primary"
-        append-icon="i-mdi-gesture"
-        @click="
-          selectValue =
-            data!.runPointList[Math.floor(Math.random() * data!.runPointList.length)].pointId
-        "
-      >
-        随机路线
-      </VBtn>
-      <NuxtLink v-if="selectValue" :to="`/run/${encodeURIComponent(selectValue)}`">
-        <VBtn class="ml-auto" color="primary" append-icon="i-mdi-arrow-right"> 开始跑步 </VBtn>
-      </NuxtLink>
-      <VBtn v-else class="ml-auto" color="primary" append-icon="i-mdi-arrow-right" disabled>
-        开始跑步
-      </VBtn>
-    </div>
-    <p class="mb-2 mt-6 text-xs">地图中的路线仅为展示路线生成效果，不等于最终路线</p>
-    <div class="h-50vh w-50vw">
-      <ClientOnly>
-        <AMap :target="selectValue" @update:target="handleUpdate" />
-      </ClientOnly>
-    </div>
-  </template>
+  <VCard class="pa-4">
+    <VCardTitle class="text-h6 mb-4">路线选择</VCardTitle>
+    <VCardText>
+      <VCard variant="outlined" class="mb-6">
+        <VCardTitle class="text-subtitle-2 pa-4 pb-0">
+          <VIcon color="primary" class="mr-2">mdi-account</VIcon>
+          个人信息
+        </VCardTitle>
+        <VCardText class="pa-4">
+          <div class="d-flex flex-wrap gap-4">
+            <div class="info-item">
+              <div class="text-caption text-medium-emphasis mb-1">学校</div>
+              <div class="text-body-1">{{ session.campusName }}</div>
+            </div>
+            <div class="info-item">
+              <div class="text-caption text-medium-emphasis mb-1">学院</div>
+              <div class="text-body-1">{{ session.collegeName }}</div>
+            </div>
+            <div class="info-item">
+              <div class="text-caption text-medium-emphasis mb-1">学号</div>
+              <div class="text-body-1">{{ session.stuNumber }}</div>
+            </div>
+            <div class="info-item">
+              <div class="text-caption text-medium-emphasis mb-1">姓名</div>
+              <div class="text-body-1">{{ session.stuName }}</div>
+            </div>
+          </div>
+        </VCardText>
+      </VCard>
+
+      <template v-if="data">
+        <VSelect
+          v-model="selectValue"
+          :items="data.runPointList"
+          item-title="pointName"
+          item-value="pointId"
+          variant="outlined"
+          label="选择路线"
+          class="mb-4"
+          :menu-props="{ maxHeight: '300px' }"
+        >
+          <template #prepend-inner>
+            <VIcon>mdi-map-marker</VIcon>
+          </template>
+        </VSelect>
+
+        <div class="d-flex gap-4 mb-6">
+          <VBtn
+            variant="outlined"
+            color="primary"
+            @click="
+              selectValue =
+                data!.runPointList[Math.floor(Math.random() * data!.runPointList.length)].pointId
+            "
+          >
+            <VIcon class="mr-2">mdi-dice-3</VIcon>
+            随机路线
+          </VBtn>
+          <VSpacer />
+          <NuxtLink v-if="selectValue" :to="`/run/${encodeURIComponent(selectValue)}`">
+            <VBtn color="primary">
+              <VIcon class="mr-2">mdi-run</VIcon>
+              开始跑步
+            </VBtn>
+          </NuxtLink>
+          <VBtn v-else color="primary" disabled>
+            <VIcon class="mr-2">mdi-run</VIcon>
+            开始跑步
+          </VBtn>
+        </div>
+
+        <VCard variant="outlined" class="mb-4">
+          <VCardTitle class="text-subtitle-2 pa-4 pb-0">
+            <VIcon color="primary" class="mr-2">mdi-map</VIcon>
+            路线预览
+          </VCardTitle>
+          <VCardText class="pa-4">
+            <p class="text-caption text-medium-emphasis mb-2">
+              地图中的路线仅为展示路线生成效果，不等于最终路线
+            </p>
+            <div class="map-container rounded-lg overflow-hidden">
+              <ClientOnly>
+                <AMap :target="selectValue" @update:target="handleUpdate" />
+              </ClientOnly>
+            </div>
+          </VCardText>
+        </VCard>
+      </template>
+    </VCardText>
+  </VCard>
 </template>
+
+<style scoped>
+.map-container {
+  height: 400px;
+  width: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.info-item {
+  min-width: 200px;
+  flex: 1;
+}
+</style>

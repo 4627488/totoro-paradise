@@ -12,22 +12,23 @@ window.global = window;
 </script>
 <template>
   <VApp>
-    <VAppBar color="primary">
-      <VAppBarTitle>龙猫乐园</VAppBarTitle>
+    <VAppBar color="primary" class="px-4" elevation="1">
+      <VAppBarTitle class="text-h6 font-weight-bold">龙猫乐园</VAppBarTitle>
+      <VSpacer />
       <template #append>
-        <VAppBarNavIcon
-          v-ripple icon="i-mdi-github" href="https://github.com/BeiyanYunyi/totoro-paradise"
-          rel="noreferrer noopener" target="_blank"
-        />
+        <VBtn icon variant="text" class="mr-2" href="https://github.com/BeiyanYunyi/totoro-paradise"
+          rel="noreferrer noopener" target="_blank">
+          <VIcon>mdi-github</VIcon>
+        </VBtn>
       </template>
     </VAppBar>
-    <VMain>
-      <div class="p-4">
+    <VMain class="bg-grey-lighten-4">
+      <VContainer class="py-6">
         <NuxtPage />
-        <p class="mt-4 text-xs">
+        <VFooter class="mt-8 text-center text-caption text-medium-emphasis">
           Powered by totoro-paradise v{{ appConfig.version }}
-        </p>
-      </div>
+        </VFooter>
+      </VContainer>
     </VMain>
   </VApp>
 </template>
