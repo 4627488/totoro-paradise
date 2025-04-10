@@ -6,11 +6,15 @@ const { data } = await useFetch<{ uuid: string; imgUrl: string }>('/api/scanQr')
 const message = ref('');
 const session = useSession();
 const isPolling = ref(false);
+const isLoading = ref(false);
+const errorMessage = ref('');
 
 const checkScanStatus = async () => {
   if (!data.value?.uuid) return;
 
   try {
+    isLoading.value = true;
+    errorMessage.value = '';
     const scanRes = await $fetch(`/api/scanQr/${data.value.uuid}`);
     const code = (scanRes as { code: string; message: null } | { code: null; message: string })
       .code as string;
@@ -24,7 +28,7 @@ const checkScanStatus = async () => {
       )[0];
 
       if (!loginResult.token) {
-        message.value = loginResult.message as string;
+        errorMessage.value = loginResult.message as string;
         return;
       }
 
@@ -38,20 +42,25 @@ const checkScanStatus = async () => {
         stuNumber: personalInfo.stuNumber,
       };
 
-      await TotoroApiWrapper.getAppFrontPage(breq);
-      await TotoroApiWrapper.getAppSlogan(breq);
-      await TotoroApiWrapper.updateAppVersion(breq);
-      await TotoroApiWrapper.getAppNotice(breq);
+      await Promise.all([
+        TotoroApiWrapper.getAppFrontPage(breq),
+        TotoroApiWrapper.getAppSlogan(breq),
+        TotoroApiWrapper.updateAppVersion(breq),
+        TotoroApiWrapper.getAppNotice(breq)
+      ]);
 
       router.push('/scanned');
     } else if (isPolling.value) {
-      setTimeout(checkScanStatus, 1000); // 每秒检查一次
+      setTimeout(checkScanStatus, 1000);
     }
   } catch (e) {
     console.error(e);
+    errorMessage.value = '发生错误，请重试';
     if (isPolling.value) {
       setTimeout(checkScanStatus, 1000);
     }
+  } finally {
+    isLoading.value = false;
   }
 };
 
@@ -94,15 +103,28 @@ const handleScanned = async () => {
         <p class="text-body-1 mb-4">请用微信扫码，扫码后点击"下一步"按钮</p>
         <VCard :height="200" :width="200" class="mx-auto mb-4" variant="outlined">
           <VCardItem class="h-100 pa-0">
-            <img v-if="!message" :src="data!.imgUrl" class="w-100 h-100 object-contain" referrerpolicy="no-referrer" />
+            <template v-if="isLoading">
+              <div class="h-100 w-100 d-flex align-center justify-center">
+                <VProgressCircular indeterminate color="primary" />
+              </div>
+            </template>
+            <img v-else-if="!message" :src="data!.imgUrl" class="w-100 h-100 object-contain"
+              referrerpolicy="no-referrer" />
             <div v-else class="h-100 w-100 d-flex align-center justify-center text-medium-emphasis">
               {{ message }}
             </div>
           </VCardItem>
         </VCard>
 
-        <VBtn color="primary" size="large" class="mb-6" @click="handleScanned">
-          <VIcon class="mr-2">mdi-arrow-right</VIcon>
+        <VAlert v-if="errorMessage" type="error" variant="tonal" class="mb-4">
+          {{ errorMessage }}
+        </VAlert>
+
+        <VBtn color="primary" size="large" class="mb-6" @click="handleScanned" :loading="isLoading"
+          :disabled="isLoading">
+          <template v-slot:prepend>
+            <VIcon>mdi-arrow-right</VIcon>
+          </template>
           下一步
         </VBtn>
 

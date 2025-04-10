@@ -17,24 +17,25 @@
     "@amap/amap-jsapi-loader": "^1.0.1",
     "@unocss/nuxt": "66.1.0-beta.6",
     "@unocss/reset": "66.1.0-beta.6",
-    "@vueuse/core": "^13.0.0",
+    "@vueuse/core": "^13.1.0",
     "buffer": "^6.0.3",
     "cli-progress": "^3.12.0",
     "colors": "^1.4.0",
     "date-fns": "^4.1.0",
-    "ky": "^1.7.5",
+    "gsap": "^3.12.7",
+    "ky": "^1.8.0",
     "leaflet": "^1.9.4",
     "md5": "^2.3.0",
     "minimist": "^1.2.8",
     "unocss": "66.1.0-beta.6",
     "uuid": "^11.1.0",
-    "vite-plugin-vuetify": "^2.1.0",
+    "vite-plugin-vuetify": "^2.1.1",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0",
-    "vuetify": "^3.7.18"
+    "vuetify": "^3.8.1"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^4.10.2",
+    "@antfu/eslint-config": "^4.12.0",
     "@iconify-json/mdi": "^1.2.3",
     "@mdi/font": "^7.4.47",
     "@rollup/plugin-inject": "^5.0.5",
@@ -43,10 +44,10 @@
     "@types/minimist": "^1.2.5",
     "@types/uuid": "^10.0.0",
     "@unocss/eslint-plugin": "66.1.0-beta.6",
-    "eslint": "^9.22.0",
+    "eslint": "^9.24.0",
     "eslint-plugin-format": "^1.0.1",
-    "nuxt": "^3.16.1",
-    "typescript": "^5.8.2"
+    "nuxt": "^3.16.2",
+    "typescript": "^5.8.3"
   },
   "pnpm": {
     "overrides": {

@@ -4,20 +4,42 @@ import TotoroApiWrapper from '~/src/wrappers/TotoroApiWrapper';
 const sunrunPaper = useSunRunPaper();
 const session = useSession();
 const selectValue = ref('');
-const data = await TotoroApiWrapper.getSunRunPaper({
-  token: session.value.token,
-  campusId: session.value.campusId,
-  schoolId: session.value.schoolId,
-  stuNumber: session.value.stuNumber,
-});
-watchEffect(() => {
-  if (data) {
-    sunrunPaper.value = data;
+const isLoading = ref(false);
+const errorMessage = ref('');
+const data = ref(null);
+
+const fetchData = async () => {
+  try {
+    isLoading.value = true;
+    errorMessage.value = '';
+    const result = await TotoroApiWrapper.getSunRunPaper({
+      token: session.value.token,
+      campusId: session.value.campusId,
+      schoolId: session.value.schoolId,
+      stuNumber: session.value.stuNumber,
+    });
+    data.value = result;
+    sunrunPaper.value = result;
+  } catch (e) {
+    console.error(e);
+    errorMessage.value = '获取路线数据失败，请重试';
+  } finally {
+    isLoading.value = false;
   }
+};
+
+onMounted(() => {
+  fetchData();
 });
 
 const handleUpdate = (target: string) => {
   selectValue.value = target;
+};
+
+const handleRandomSelect = () => {
+  if (!data.value?.runPointList?.length) return;
+  const randomIndex = Math.floor(Math.random() * data.value.runPointList.length);
+  selectValue.value = data.value.runPointList[randomIndex].pointId;
 };
 </script>
 <template>
@@ -51,43 +73,43 @@ const handleUpdate = (target: string) => {
         </VCardText>
       </VCard>
 
-      <template v-if="data">
-        <VSelect
-          v-model="selectValue"
-          :items="data.runPointList"
-          item-title="pointName"
-          item-value="pointId"
-          variant="outlined"
-          label="选择路线"
-          class="mb-4"
-          :menu-props="{ maxHeight: '300px' }"
-        >
+      <VAlert v-if="errorMessage" type="error" variant="tonal" class="mb-4">
+        {{ errorMessage }}
+      </VAlert>
+
+      <template v-if="isLoading">
+        <div class="d-flex justify-center my-8">
+          <VProgressCircular indeterminate color="primary" />
+        </div>
+      </template>
+      <template v-else-if="data">
+        <VSelect v-model="selectValue" :items="data.runPointList" item-title="pointName" item-value="pointId"
+          variant="outlined" label="选择路线" class="mb-4" :menu-props="{ maxHeight: '300px' }">
           <template #prepend-inner>
             <VIcon>mdi-map-marker</VIcon>
           </template>
         </VSelect>
 
         <div class="d-flex gap-4 mb-6">
-          <VBtn
-            variant="outlined"
-            color="primary"
-            @click="
-              selectValue =
-                data!.runPointList[Math.floor(Math.random() * data!.runPointList.length)].pointId
-            "
-          >
-            <VIcon class="mr-2">mdi-dice-3</VIcon>
+          <VBtn variant="outlined" color="primary" @click="handleRandomSelect" :disabled="!data.runPointList?.length">
+            <template v-slot:prepend>
+              <VIcon>mdi-dice-3</VIcon>
+            </template>
             随机路线
           </VBtn>
           <VSpacer />
           <NuxtLink v-if="selectValue" :to="`/run/${encodeURIComponent(selectValue)}`">
             <VBtn color="primary">
-              <VIcon class="mr-2">mdi-run</VIcon>
+              <template v-slot:prepend>
+                <VIcon>mdi-run</VIcon>
+              </template>
               开始跑步
             </VBtn>
           </NuxtLink>
           <VBtn v-else color="primary" disabled>
-            <VIcon class="mr-2">mdi-run</VIcon>
+            <template v-slot:prepend>
+              <VIcon>mdi-run</VIcon>
+            </template>
             开始跑步
           </VBtn>
         </div>
@@ -123,5 +145,11 @@ const handleUpdate = (target: string) => {
 .info-item {
   min-width: 200px;
   flex: 1;
+}
+
+@media (max-width: 600px) {
+  .info-item {
+    min-width: 100%;
+  }
 }
 </style>
