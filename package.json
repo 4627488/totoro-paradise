@@ -2,7 +2,7 @@
   "name": "totoro-paradise",
   "type": "module",
   "version": "2.1.0",
-  "packageManager": "pnpm@8.15.5",
+  "packageManager": "pnpm@10.25.0+sha512.5e82639027af37cf832061bcc6d639c219634488e0f2baebe785028a793de7b525ffcd3f7ff574f5e9860654e098fe852ba8ac5dd5cefe1767d23a020a92f501",
   "author": "BeiyanYunyi & Clansty",
   "license": "AGPL-3.0-or-later",
   "scripts": {
@@ -17,37 +17,37 @@
     "@amap/amap-jsapi-loader": "^1.0.1",
     "@unocss/nuxt": "66.1.0-beta.6",
     "@unocss/reset": "66.1.0-beta.6",
-    "@vueuse/core": "^13.1.0",
+    "@vueuse/core": "^13.9.0",
     "buffer": "^6.0.3",
     "cli-progress": "^3.12.0",
     "colors": "^1.4.0",
     "date-fns": "^4.1.0",
-    "gsap": "^3.12.7",
-    "ky": "^1.8.0",
+    "gsap": "^3.14.1",
+    "ky": "^1.14.1",
     "leaflet": "^1.9.4",
     "md5": "^2.3.0",
     "minimist": "^1.2.8",
     "unocss": "66.1.0-beta.6",
     "uuid": "^11.1.0",
-    "vite-plugin-vuetify": "^2.1.1",
-    "vue": "^3.5.13",
-    "vue-router": "^4.5.0",
-    "vuetify": "^3.8.1"
+    "vite-plugin-vuetify": "^2.1.2",
+    "vue": "^3.5.25",
+    "vue-router": "^4.6.3",
+    "vuetify": "^3.11.3"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^4.12.0",
+    "@antfu/eslint-config": "^4.19.0",
     "@iconify-json/mdi": "^1.2.3",
     "@mdi/font": "^7.4.47",
     "@rollup/plugin-inject": "^5.0.5",
     "@types/cli-progress": "^3.11.6",
-    "@types/md5": "^2.3.5",
+    "@types/md5": "^2.3.6",
     "@types/minimist": "^1.2.5",
     "@types/uuid": "^10.0.0",
     "@unocss/eslint-plugin": "66.1.0-beta.6",
-    "eslint": "^9.24.0",
-    "eslint-plugin-format": "^1.0.1",
-    "nuxt": "^3.16.2",
-    "typescript": "^5.8.3"
+    "eslint": "^9.39.1",
+    "eslint-plugin-format": "^1.1.0",
+    "nuxt": "^3.20.2",
+    "typescript": "^5.9.3"
   },
   "pnpm": {
     "overrides": {
@@ -55,6 +55,10 @@
       "hasown": "npm:@nolyfill/hasown@latest",
       "isarray": "npm:@nolyfill/isarray@latest",
       "side-channel": "npm:@nolyfill/side-channel@latest"
-    }
+    },
+    "ignoredBuiltDependencies": [
+      "@parcel/watcher",
+      "esbuild"
+    ]
   }
 }
